@@ -24,10 +24,6 @@ import dev.vankka.dynamicproxy.processor.Original;
 import dev.vankka.dynamicproxy.processor.Proxy;
 import github.scarsz.discordsrv.util.DiscordChatChannelCommandFeedbackForwarder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,10 +44,6 @@ public abstract class CommandSenderDynamic implements CommandSender {
 
     private void doSend(String message) {
         sendUtil.send(message);
-    }
-
-    private void doSend(ComponentLike componentLike) {
-        doSend(BukkitComponentSerializer.legacy().serialize(componentLike.asComponent()));
     }
 //
 //    @Override
@@ -152,20 +144,6 @@ public abstract class CommandSenderDynamic implements CommandSender {
         for (String string : strings) {
             doSend(string);
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void sendMessage(@NotNull BaseComponent... components) {
-        original.sendMessage(components);
-        doSend(BungeeComponentSerializer.get().deserialize(components));
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void sendMessage(@NotNull BaseComponent component) {
-        original.sendMessage(component);
-        doSend(BungeeComponentSerializer.get().deserialize(new BaseComponent[] {component}));
     }
 
 }

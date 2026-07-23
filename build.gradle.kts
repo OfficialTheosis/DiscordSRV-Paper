@@ -114,7 +114,6 @@ tasks {
         relocate("com.iwebpp.crypto", "github.scarsz.discordsrv.dependencies.iwebpp.crypto")
         relocate("com.vdurmont.emoji", "github.scarsz.discordsrv.dependencies.emoji")
         relocate("com.neovisionaries.ws", "github.scarsz.discordsrv.dependencies.ws")
-        relocate("net.kyori", "github.scarsz.discordsrv.dependencies.kyori")
         relocate("dev.vankka.mcdiscordreserializer", "github.scarsz.discordsrv.dependencies.mcdiscordreserializer")
         relocate("dev.vankka.simpleast", "github.scarsz.discordsrv.dependencies.simpleast")
         relocate("org.bstats", "github.scarsz.discordsrv.dependencies.bstats")
@@ -128,7 +127,6 @@ tasks {
         relocate("com.fasterxml.jackson", "github.scarsz.discordsrv.dependencies.jackson")
         relocate("com.google.common", "github.scarsz.discordsrv.dependencies.google.common")
         relocate("com.google.errorprone", "github.scarsz.discordsrv.dependencies.google.errorprone")
-        relocate("com.google.gson", "github.scarsz.discordsrv.dependencies.google.gson")
         relocate("com.google.j2objc", "github.scarsz.discordsrv.dependencies.google.j2objc")
         relocate("com.github.kevinsawicki", "github.scarsz.discordsrv.dependencies.kevinsawicki")
         relocate("com.github.zafarkhaja", "github.scarsz.discordsrv.dependencies.zafarkhaja")
@@ -180,7 +178,6 @@ publishing {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://central.sonatype.com/repository/maven-snapshots/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
@@ -217,15 +214,10 @@ dependencies {
     // This means that DiscordSRV is NOT vulnerable to CVE-2021-44228
     compileOnly("org.apache.logging.log4j:log4j-core:2.0-beta9")
 
-    // adventure, adventure-platform, MCDiscordReserializer
-    val adventureVersion = "4.25.0"
-    api("net.kyori:adventure-api:${adventureVersion}")
-    api("net.kyori:adventure-text-minimessage:${adventureVersion}")
-    api("net.kyori:adventure-text-serializer-legacy:${adventureVersion}")
-    api("net.kyori:adventure-text-serializer-plain:${adventureVersion}")
-    api("net.kyori:adventure-text-serializer-gson:${adventureVersion}")
-    implementation("net.kyori:adventure-platform-bukkit:4.4.0")
-    api("dev.vankka:mcdiscordreserializer:4.3.0")
+    // MCDiscordReserializer
+    api("dev.vankka:mcdiscordreserializer:4.3.0") {
+        exclude(group = "net.kyori")
+    }
 
     // Annotations
     compileOnlyApi("org.jetbrains:annotations:23.0.0")

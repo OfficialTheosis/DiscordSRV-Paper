@@ -30,7 +30,6 @@ import dev.vankka.simpleast.core.simple.SimpleMarkdownRules;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.objects.DiscordSRVMinecraftRenderer;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -106,7 +105,6 @@ public class MessageUtil {
      */
     public static final MinecraftSerializer LIMITED_MINECRAFT_SERIALIZER;
 
-    private static BukkitAudiences BUKKIT_AUDIENCES;
     private static final boolean MC_1_16;
 
     static {
@@ -130,11 +128,6 @@ public class MessageUtil {
         } catch (Throwable ignored) {}
 
         MC_1_16 = available;
-    }
-
-    private static BukkitAudiences getAudiences() {
-        return (BUKKIT_AUDIENCES != null ? BUKKIT_AUDIENCES :
-                (BUKKIT_AUDIENCES = BukkitAudiences.create(DiscordSRV.getPlugin())));
     }
 
     private MessageUtil() {}
@@ -333,11 +326,10 @@ public class MessageUtil {
         Set<Audience> audiences = new HashSet<>();
         Set<Audience> degradedAudiences = new HashSet<>();
         commandSenders.forEach(sender -> {
-            Audience audience = getAudiences().sender(sender);
             if (sender instanceof Player && DiscordSRV.getPlugin().getIncompatibleClientManager().isIncompatible((Player) sender)) {
-                degradedAudiences.add(audience);
+                degradedAudiences.add(sender);
             } else {
-                audiences.add(audience);
+                audiences.add(sender);
             }
         });
 
