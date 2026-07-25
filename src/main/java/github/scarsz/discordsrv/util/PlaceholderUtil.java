@@ -59,20 +59,7 @@ public class PlaceholderUtil {
      * Important when the content may contain role mentions
      */
     public static String replacePlaceholdersToDiscord(String input, OfflinePlayer player) {
-        boolean placeholderapi = PluginUtil.pluginHookIsEnabled("placeholderapi");
-
-        // PlaceholderAPI has a side effect of replacing chat colors at the end of placeholder conversion
-        // that breaks role mentions: <@&role id> because it converts the & to a §
-        // So we add a zero width space after the & to prevent it from translating, and remove it after conversion
-        if (placeholderapi) input = input.replace("&", "&\u200B");
-
-        input = replacePlaceholders(input, player);
-
-        if (placeholderapi) {
-            input = MessageUtil.stripLegacy(input); // PAPI no longer replaces chat colors? strip both legacy codes
-            input = input.replace("&\u200B", "&");
-        }
-        return input;
+        return replacePlaceholders(input, player);
     }
 
     /*
