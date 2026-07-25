@@ -75,6 +75,8 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import okhttp3.*;
 import okhttp3.internal.Util;
 import okhttp3.internal.tls.OkHostnameVerifier;
@@ -1700,7 +1702,6 @@ public class DiscordSRV extends JavaPlugin {
         this.processChatMessage(player, message, channel, cancelled, null);
     }
 
-    @SuppressWarnings("deprecation") // Display names are legacy, Spigot is supported
     public void processChatMessage(Player player, Component message, String channel, boolean cancelled, org.bukkit.event.Event event) {
         // log debug message to notify that a chat message was being processed
         debug(Debug.MINECRAFT_TO_DISCORD, "Chat message received, canceled: " + cancelled + ", channel: " + channel);
@@ -1744,8 +1745,7 @@ public class DiscordSRV extends JavaPlugin {
         String prefix = config().getString("DiscordChatChannelPrefixRequiredToProcessMessage");
         boolean blacklist = config.getBoolean("DiscordChatChannelPrefixActsAsBlacklist");
 
-        String legacy = MessageUtil.toLegacy(message);
-        if (MessageUtil.strip(legacy).startsWith(prefix) == blacklist) {
+        if (PlainTextComponentSerializer.plainText().serialize(message).startsWith(prefix) == blacklist) {
             debug(Debug.MINECRAFT_TO_DISCORD, "User " + player.getName() + " sent a message but it was not delivered to Discord because " + (blacklist ? "the message started with \"" + prefix : "the message didn't start with \"" + prefix) + "\" (DiscordChatChannelPrefixRequiredToProcessMessage): \"" + message + "\"");
             return;
         }
@@ -1771,7 +1771,7 @@ public class DiscordSRV extends JavaPlugin {
         if (reserializer) {
             discordMessageContent = MessageUtil.reserializeToDiscord(message);
         } else {
-            discordMessageContent = MessageUtil.strip(MessageUtil.toLegacy(message));
+            discordMessageContent = PlainTextComponentSerializer.plainText().serialize(message);
         }
 
         // Modify the message's content with the declared Regexes
@@ -1793,7 +1793,8 @@ public class DiscordSRV extends JavaPlugin {
             String username = player.getName();
             if (!reserializer) username = DiscordUtil.escapeMarkdown(username);
 
-            String displayName = MessageUtil.strip(player.getDisplayName());
+            String displayName = PlainTextComponentSerializer.plainText().serialize(player.name());
+            String worldName = player.getWorld().getName();
 
             // Replace the internal placeholders in the message pattern
             String discordMessagePattern = (hasGoodGroup
@@ -1805,11 +1806,13 @@ public class DiscordSRV extends JavaPlugin {
                     .replaceAll("%time%|%date%", TimeUtil.timeStamp())
                     .replace("%channelname%", channel != null ? channel.substring(0, 1).toUpperCase() + channel.substring(1) : "")
                     .replace("%primarygroup%", userPrimaryGroup)
-                    .replace("%usernamenoescapes%", MessageUtil.strip(player.getName()))
-                    .replace("%world%", player.getWorld().getName())
-                    .replace("%worldalias%", MessageUtil.strip(getWorldAlias(player.getWorld().getName())));
+                    .replace("%usernamenoescapes%", player.getName())
+                    .replace("%world%", worldName)
+                    .replace("%worldalias%", getWorldAlias(worldName));
             // Replace the PAPI placeholders in the message pattern
             discordMessagePattern = PlaceholderUtil.replacePlaceholdersToDiscord(discordMessagePattern, player);
+            // Flatten MiniMessage tags in the message pattern
+            discordMessagePattern = PlainTextComponentSerializer.plainText().serialize(MiniMessage.miniMessage().deserialize(discordMessagePattern));
 
             /*
             // Reserialize the message pattern, in the case the placeholders added more color codes.
@@ -1825,10 +1828,6 @@ public class DiscordSRV extends JavaPlugin {
                                                 LegacyComponentSerializer.SECTION_CHAR)
                                 ));
             } else*/
-            // Strip the final message from any rouge color/style codes.
-            if (!reserializer) {
-                discordMessagePattern = MessageUtil.strip(discordMessagePattern);
-            }
 
             // Replace the message after to avoid replacing rouge PAPI placeholders inside of the message's content
             discordMessagePattern = discordMessagePattern

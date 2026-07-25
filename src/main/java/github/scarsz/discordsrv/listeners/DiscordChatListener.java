@@ -467,13 +467,17 @@ public class DiscordChatListener extends ListenerAdapter {
 
                 String playerFormat = LangUtil.Message.PLAYER_LIST_COMMAND_PLAYER.toString()
                         .replace("%username%", player.getName())
-                        .replace("%displayname%", MessageUtil.strip(player.getDisplayName()))
+                        .replace("%displayname%", PlainTextComponentSerializer.plainText().serialize(player.displayName()))
                         .replace("%primarygroup%", userPrimaryGroup)
                         .replace("%world%", player.getWorld().getName())
-                        .replace("%worldalias%", MessageUtil.strip(DiscordSRV.getPlugin().getWorldAlias(player.getWorld().getName())));
+                        .replace("%worldalias%", DiscordSRV.getPlugin().getWorldAlias(player.getWorld().getName()));
 
                 // use PlaceholderAPI if available
                 playerFormat = PlaceholderUtil.replacePlaceholdersToDiscord(playerFormat, player);
+
+                // Flatten MiniMessage tags
+                playerFormat = PlainTextComponentSerializer.plainText().serialize(MiniMessage.miniMessage().deserialize(playerFormat));
+
                 playerList.add(playerFormat);
             }
 
