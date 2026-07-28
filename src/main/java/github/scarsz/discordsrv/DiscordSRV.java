@@ -1831,7 +1831,7 @@ public class DiscordSRV extends JavaPlugin {
 
             // Replace the message after to avoid replacing rouge PAPI placeholders inside of the message's content
             discordMessagePattern = discordMessagePattern
-                    .replace("%message%", discordMessageContent);
+                    .replace("%message%", DiscordUtil.escapeMarkdown(discordMessageContent));
 
             discordMessagePattern = processRegex(discordMessagePattern);
             if (discordMessagePattern == null) return;
