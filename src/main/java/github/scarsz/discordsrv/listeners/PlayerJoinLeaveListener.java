@@ -24,7 +24,12 @@ import github.scarsz.discordsrv.Debug;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.objects.MessageFormat;
 import github.scarsz.discordsrv.objects.managers.GroupSynchronizationManager;
-import github.scarsz.discordsrv.util.*;
+import github.scarsz.discordsrv.util.DiscordUtil;
+import github.scarsz.discordsrv.util.GamePermissionUtil;
+import github.scarsz.discordsrv.util.LangUtil;
+import github.scarsz.discordsrv.util.MessageUtil;
+import github.scarsz.discordsrv.util.PlayerUtil;
+import github.scarsz.discordsrv.util.SchedulerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -102,7 +107,7 @@ public class PlayerJoinLeaveListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW) //priority needs to be different to MONITOR to avoid problems with permissions check when PEX is used, it needs to be < NORMAL so that it executes before VanishNoPacket's player leave listener and is able to see whether the player is vanished
+    @EventHandler(priority = EventPriority.MONITOR)
     public void PlayerQuitEvent(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         if (PlayerUtil.isVanished(player)) {

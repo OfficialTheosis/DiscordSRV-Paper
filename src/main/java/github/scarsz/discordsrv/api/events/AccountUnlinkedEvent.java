@@ -22,10 +22,11 @@ package github.scarsz.discordsrv.api.events;
 
 import github.scarsz.discordsrv.objects.managers.AccountLinkManager;
 import github.scarsz.discordsrv.util.DiscordUtil;
-import java.util.UUID;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+
+import java.util.UUID;
 
 /**
  * <p>Called directly after an account pair is unlinked via DiscordSRV's {@link AccountLinkManager}</p>

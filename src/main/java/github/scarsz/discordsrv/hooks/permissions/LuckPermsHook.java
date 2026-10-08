@@ -40,9 +40,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
-
-import java.util.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class LuckPermsHook implements PluginHook, net.luckperms.api.context.ContextCalculator<Player> {
 

@@ -20,13 +20,13 @@
 
 package github.scarsz.discordsrv.api.commands;
 
-import java.util.Objects;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**

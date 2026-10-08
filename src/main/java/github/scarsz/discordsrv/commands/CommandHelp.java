@@ -28,7 +28,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CommandHelp {

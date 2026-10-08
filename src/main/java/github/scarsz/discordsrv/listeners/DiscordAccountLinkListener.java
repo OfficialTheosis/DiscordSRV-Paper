@@ -35,7 +35,6 @@ import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
